@@ -30,6 +30,8 @@ bot4 = commands.Bot(command_prefix={prefix}, intents=intents, help_command=None)
 
 kyonotenpura = []
 last_reset_date = None
+kyononeta = []
+susikaiten = None
 
 def tench():
     """メッセージ受信時などに呼び出して、日付が変わっていたらリセット"""
@@ -46,6 +48,22 @@ def tench():
         kyonotenpura = []
         last_reset_date = current_date
         print(f"{now.strftime('%Y-%m-%d %H:%M:%S')} JST - kyonotenpuraをリセットしました")
+
+def netach():
+    """メッセージ受信時などに呼び出して、日付が変わっていたらリセット"""
+    global kyononeta, susikaiten
+    
+    jst = pytz.timezone('Asia/Tokyo')
+    now = datetime.now(jst)
+    current_date = now.date()
+    
+    # 初回実行または日付が変わった場合
+    if susikaiten is None:
+        susikaiten = current_date
+    elif current_date != susikaiten:
+        kyononeta = []
+        susikaiten = current_date
+        print(f"{now.strftime('%Y-%m-%d %H:%M:%S')} JST - kyononetaをリセットしました")
 
 # 許可されたユーザーのIDリスト（実際のDiscord User IDに置き換えてください）
 ALLOWED_USER_IDS = ast.literal_eval(os.getenv('allow'))
@@ -76,8 +94,9 @@ async def しがちゃ(ctx):
 @bot4.command()
 @is_authorized_user()
 async def reset(ctx):
-    global kyonotenpura
+    global kyonotenpura, kyononeta
     kyonotenpura = []
+    kyononeta = []
     await ctx.reply("リセットしたよ！")
 #--------------------------------------------------
 @bot4.command()
@@ -96,6 +115,19 @@ async def てんぷら(ctx):
         k2 = site[osume]
         await ctx.reply(f"今日作るべき天ぷらは{k1}だよ！\nレシピ:{k2}")
         kyonotenpura.append(ctx.author.id)
+#--------------------------------------------------
+@bot4.command()
+async def すしねたがちゃ(ctx):
+    netach()
+    global kyononeta
+    if ctx.author.id in kyononeta:
+        await ctx.reply("みんなにおごってたら回転寿司で破産したので今日はもうやめて")
+        return
+    else:
+        dotti = ["まぐろ","かつお","サーモン","えび","いか","たこ","たまご","生ハム","鴨","なす","生えび","あなご","チキン","ハンバーグ","はまち","たい","あじ","いわし","数の子","貝","うなぎ","とろ","ほたて","かに","たらこ","ミートボール","なっとう","きゅうり","いなり","たくあん"]
+        k1 = random.choice(dotti)
+        await ctx.reply(f"あなたが食うべき寿司ネタは{k1}だよ！\nさぁかいてんずしに行ってこい")
+        kyononeta.append(ctx.author.id)
 #--------------------------------------------------
 @bot4.tree.command(name="up", description="ファイルをアップロードしてメディアリンクを取得します")
 @app_commands.describe(file="アップロードするファイル")
