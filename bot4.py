@@ -562,7 +562,7 @@ async def coin(ctx):
 #--------------------------------------------------
 @bot4.command()
 async def help(ctx):
-    await ctx.reply("[Web版のhelpです。(通信料は自己負担)](https://sakusaku.static.jp/help )\n[Web版のお問い合わせ先です。(通信料は自己負担)](https://sakusaku.static.jp/toi )")
+    await ctx.reply("[Web版のhelpです。(通信料は自己負担)](https://sakusaku.static.jp/help )\n[Web版のお問い合わせ先です。(通信料は自己負担)](https://sakusaku.static.jp/toi )\nこのbotはMPL2.0でオープンソースです。\nhttps://github.com/yoshihisa11132/sakusaku/tree/main")
 
     
 # インポート時は実行せず、直接実行時のみbotを起動
