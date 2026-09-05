@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, timezone
 
 # .envファイルを読み込み
 load_dotenv()
-
+print("hi")
 # bot1、bot2、bot3、bot4をインポート
 from bot1 import bot1
 from bot4 import bot4
