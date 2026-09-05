@@ -6,7 +6,5 @@
 
 <div align="center">
   <p>昔からの注ぎ足し方式で開発を進めています</p>
+  <a href="https://sakusaku.static.jp" target="_blank">実際にホストしています！</a>
 </div>
-
-
-
