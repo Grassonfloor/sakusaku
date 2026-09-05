@@ -33,6 +33,8 @@ class Sakusaku(commands.Bot):
             for name in file:
                 if name.endswith(".py") and not name.startswith("_"):
                     FullPath = os.path.join(Root, name)
+
+                    ## Real Phonks Mangoss....
                     RealMangoPhonk676767676767 = os.path.relpath(FullPath,BASE_DIR)
                     extension = RealMangoPhonk676767676767.replace(os.sep, ".").removesuffix(".py")
 
