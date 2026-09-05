@@ -35,7 +35,7 @@ class Sakusaku(commands.Bot):
                     FullPath = os.path.join(Root, name)
                     RealMangoPhonk676767676767 = os.path.relpath(FullPath,BASE_DIR)
                     extension = RealMangoPhonk676767676767.replace(os.sep, ".").removesuffix(".py")
-                            
+
                     try:
                         await self.load_extension(extension)
                         log.info(f"Successfully loaded: {extension}")
