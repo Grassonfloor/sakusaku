@@ -131,48 +131,7 @@ async def すしねたがちゃ(ctx):
         await ctx.reply(f"あなたが食うべき寿司ネタは{k1}だよ！\nさぁかいてんずしに行ってこい")
         kyononeta.append(ctx.author.id)
 #--------------------------------------------------
-@bot4.tree.command(name="up", description="ファイルをアップロードしてメディアリンクを取得します")
-@app_commands.describe(file="アップロードするファイル")
-async def upload_file(interaction: discord.Interaction, file: discord.Attachment):
-    await interaction.response.defer()
-    
-    try:
-        # アップロード先のチャンネルを取得
-        upload_channel = bot4.get_channel(UPLOAD_CHANNEL_ID)
-        if not upload_channel:
-            await interaction.followup.send("なんかおかしーぞー")
-            return
-        
-        # ファイルをダウンロード
-        async with aiohttp.ClientSession() as session:
-            async with session.get(file.url) as resp:
-                if resp.status != 200:
-                    await interaction.followup.send("~~かわりにとうこう~~ダウンロードできなかった")
-                    return
-                file_data = await resp.read()
-        
-        # 指定チャンネルにファイルを送信
-        import io
-        file_io = io.BytesIO(file_data)
-        discord_file = discord.File(fp=file_io, filename=file.filename)
-        
-        message = await upload_channel.send(file=discord_file)
-        
-        # アップロードされたファイルのメディアリンクを取得
-        if message.attachments:
-            media_url = message.attachments[0].url
-            
-            # 結果を公開メッセージで送信
-            response_text = f"{interaction.user.mention} さんがファイルを送信しました。\n{media_url}"
-            await interaction.followup.send(response_text)
-        else:
-            await interaction.followup.send("discordがいじわるなのかしらんけどリンクもらえなかった")
-            
-    except Exception as e:
-        await interaction.followup.send(f"なんかえらった: {str(e)}")
-        print(f"エラー: {e}")
 
-#--------------------------------------------------
 @bot4.command(name='wl')
 @is_authorized_user()
 async def wl_command(ctx):
@@ -201,10 +160,10 @@ async def http(ctx, cag):
     await ctx.reply(embed=embed,mention_author=False)
 #--------------------------------------------------
 @bot4.command()
-async def feed(ctx, sex):
-	tenis = 1446776227082801246
+async def feed(ctx, etti):
+	tenis = os.getenv('webhookhayada')
 	bail = bot4.get_channel(tenis)
-	embed = discord.Embed(title="問い合わせが来たよ!",description=sex,color=discord.Colour.from_rgb(102,250,184))
+	embed = discord.Embed(title="問い合わせが来たよ!",description=etti,color=discord.Colour.from_rgb(102,250,184))
 	A = ctx.author.display_name
 	B = ctx.author.name
 	C = ctx.author.id
@@ -215,6 +174,7 @@ async def feed(ctx, sex):
 	await bail.send("<@1376164344651321587>",embed=embed)
 #--------------------------------------------------
 @bot4.command(name='timer')
+@is_authorized_user()
 async def timer(ctx, minutes: int):
     try:
         if minutes <= 0:
