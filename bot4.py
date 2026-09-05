@@ -17,7 +17,9 @@ import ast
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-intents = discord.Intents.all()
+#intents = discord.Intents.all()
+intents = discord.Intents.default()
+intents.message_content = True  # 必要最小限の特権インテントのみ有効化
 client = discord.Client(intents=intents)
 # 枕(プレフィックス)がデカすぎます！
 prefix = os.getenv('prefix')
@@ -169,76 +171,7 @@ async def upload_file(interaction: discord.Interaction, file: discord.Attachment
     except Exception as e:
         await interaction.followup.send(f"なんかえらった: {str(e)}")
         print(f"エラー: {e}")
-#--------------------------------------------------
-# より詳細なサーバー情報を表示するバージョン
-@bot4.command(name='server')
-@is_authorized_user()
-async def server_list_detailed(ctx):
-    """詳細なサーバーリストを表示"""
-    await bot4.change_presence(activity=discord.Game(f'{len(bot4.guilds)}サーバーで稼働中、、、'))
-    if len(bot4.guilds) == 0:
-        await ctx.reply("参加しているサーバーがありません。幻のメッセージ")
-        return
-    
-    embed = discord.Embed(
-        title="🔗 ボット参加サーバー詳細リスト",
-        description=f"参加サーバー数: {len(bot4.guilds)}",
-        color=0x2ecc71
-    )
-    
-    for guild in bot4.guilds:
-        invite_link = await get_invite_link(guild)
-        
-        # サーバー情報
-        server_info = (
-            f"**メンバー数:** {guild.member_count}\n"
-            f"**作成日:** {guild.created_at.strftime('%Y/%m/%d')}\n"
-            f"**招待リンク:** [クリックして参加]({invite_link})"
-        )
-        
-        embed.add_field(
-            name=f"🌐 {guild.name}",
-            value=server_info,
-            inline=True
-        )
-    
-    await ctx.reply(embed=embed, mention_author=False)
-    
-async def get_invite_link(guild):
-    """サーバーの招待リンクを取得する関数"""
-    try:
-        # 既存の招待リンクがあるかチェック
-        invites = await guild.invites()
-        if invites:
-            # 期限切れでない招待リンクを探す
-            for invite in invites:
-                if invite.max_age == 0 or invite.created_at:
-                    return invite.url
-        
-        # 招待リンクがない場合、新しく作成
-        # システムチャンネルまたは最初のテキストチャンネルを使用
-        channel = guild.system_channel
-        if not channel:
-            # システムチャンネルがない場合、最初のテキストチャンネルを取得
-            for ch in guild.text_channels:
-                if ch.permissions_for(guild.me).create_instant_invite:
-                    channel = ch
-                    break
-        
-        if channel:
-            invite = await channel.create_invite(
-                max_age=0,  # 無期限
-                max_uses=0,  # 無制限使用
-                reason="サーバーリスト用招待リンク"
-            )
-            return invite.url
-        else:
-            return "招待リンクを作成できません"
-            
-    except discord.Forbidden:
-        return "招待リンク作成権限がありません"
-    except Exception as e:
-        return f"エラー: {str(e)}"
+
 #--------------------------------------------------
 @bot4.command(name='wl')
 @is_authorized_user()
@@ -594,7 +527,7 @@ async def coin(ctx):
 #--------------------------------------------------
 @bot4.command()
 async def help(ctx):
-    await ctx.reply("[Web版のhelpです。(通信料は自己負担)](https://sakusaku.static.jp/help )\n[Web版のお問い合わせ先です。(通信料は自己負担)](https://sakusaku.static.jp/toi )\nこのbotはMPL2.0でオープンソースです。\nhttps://github.com/yoshihisa11132/sakusaku/tree/main")
+    await ctx.reply("[Web版のhelpです。(通信料は自己負担)](https://sakusaku.static.jp/help )\n[Web版のお問い合わせ先です。(通信料は自己負担)](https://sakusaku.static.jp/toi )\n[プライバシーポリシーです。(通信量は自己負担)](https://sakusaku.static.jp/privacy/ )\nbotはMPL2.0でオープンソースです。\nhttps://github.com/yoshihisa11132/sakusaku/tree/main")
 
     
 # インポート時は実行せず、直接実行時のみbotを起動
