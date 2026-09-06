@@ -23,6 +23,8 @@ log = logging.getLogger("rich")
 
 BASE_DIR = Path(__file__).parent
 
+log.info("do a barrel roll!")
+
 class Sakusaku(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix=Prefix, intents=Intents)
@@ -49,6 +51,11 @@ class Sakusaku(commands.Bot):
     async def setup_hook(self):
         log.info("setup_hook() running")
         await self.load_cogs(dir="Cogs")
+
+    # @is_Allowed (ホワイトリスト)
+    # async def is_Allowed(userid):
+    #     def 
+         
 
     async def on_ready(self):
         log.info(f"Successfully Logged in as {self.user}!")
